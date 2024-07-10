@@ -10,11 +10,11 @@ VERSION="00"
 
 # includes and libs
 INCS="${INCS} -I libs/base -I libs/glad -I libs/imgui"
-LIBS="-lm -lGL -lpthread -lglfw -lSDL2"
+LIBS="-lm -lGL -lpthread -lglfw -L ./libs/imgui -limgui -ldl"
 
 # flags
 CPPFLAGS="${CPPFLAGS} -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\""
-CFLAGS="${CFLAGS} -g -Wall -Wno-deprecated-declarations -Wno-write-strings -Wno-writable-strings -Wno-unused-function -O3 ${INCS} ${CPPFLAGS}"
+CFLAGS="${CFLAGS} -g -Wall -Wno-deprecated-declarations -Wno-write-strings -Wno-unused-function -O3 ${INCS} ${CPPFLAGS}"
 
 # compiler
 CC="g++"
