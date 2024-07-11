@@ -1,3 +1,6 @@
 [submodule "libs/imgui"]
 	path = libs/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "libs/linmath"]
+	path = libs/linmath
+	url = git@github.com:datenwolf/linmath.h.git

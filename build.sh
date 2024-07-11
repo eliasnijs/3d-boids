@@ -9,7 +9,7 @@ NAME="a.out"
 VERSION="00"
 
 # includes and libs
-INCS="${INCS} -I libs/base -I libs/glad -I libs/imgui"
+INCS="${INCS} -I libs/base -I libs/glad -I libs/imgui -I libs/linmath"
 LIBS="-lm -lGL -lpthread -lglfw -L ./libs/imgui -limgui -ldl"
 
 # flags
@@ -24,3 +24,4 @@ echo "[build.sh]# building $NAME"
 echo ${CC} $CFLAGS -o "build/$NAME" $SOURCE $LIBS
 ${CC} $CFLAGS -o "build/$NAME" $SOURCE $LIBS
 echo "[build.sh]# finished building"
+

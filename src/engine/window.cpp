@@ -1,13 +1,5 @@
 
 internal void
-handle_input(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS
-	    || glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-}
-
-internal void
 simple_error_callback(I32 error, const char* description) {
 	fprintf(stderr, "GLFW error: %s\n", description);
 }
