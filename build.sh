@@ -9,8 +9,8 @@ NAME="a.out"
 VERSION="00"
 
 # includes and libs
-INCS="${INCS} -I libs/base -I libs/glad -I libs/imgui -I libs/linmath"
-LIBS="-lm -lGL -lpthread -lglfw -L ./libs/imgui -limgui -ldl"
+INCS="${INCS} -I libs/base -I libs/glad -I libs/imgui -I libs/linmath -I libs/stb"
+LIBS="-L ./libs/archives -lm -lGL -lpthread -lglfw -limgui -lstb"
 
 # flags
 CPPFLAGS="${CPPFLAGS} -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\""

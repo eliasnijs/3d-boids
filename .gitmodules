@@ -4,3 +4,6 @@
 [submodule "libs/linmath"]
 	path = libs/linmath
 	url = git@github.com:datenwolf/linmath.h.git
+[submodule "libs/stb"]
+	path = libs/stb
+	url = https://github.com/nothings/stb
