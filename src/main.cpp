@@ -61,15 +61,16 @@ main()
 
 	F32 vertices[] = {
 		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   1.0f, 1.0f,
-		 0.5f, -0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   0.0f, 1.0f
+		 0.5f,  0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   1.0f, 1.0f, // 0: front right top
+		 0.5f, -0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   1.0f, 0.0f, // 1: front right bottom
+		-0.5f, -0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   0.0f, 0.0f, // 2: front left bottom
+		-0.5f,  0.5f, 0.0f,   0.4f, 0.4f, 0.4f,   0.0f, 1.0f, // 3: front left top
 	};
 
 	U32 indices[] = {
-		0, 1, 3,    // first triangle
-		1, 2, 3     // second triangle
+		// front
+		0, 1, 3,
+		1, 2, 3
 	};
 
 
@@ -146,11 +147,10 @@ main()
 	shader_set_I32(shader_program, "tex1", 0);
 	shader_set_I32(shader_program, "tex2", 1);
 
-
-	////////////////////////////////////////////////////////////////////////
-	//// Main loop
-
-	F64 frame_duration = 1.0;
+	F64  frame_duration	= 1.0;
+	vec3 translation	= {0.0f, 0.0f, 0.0f};
+	vec3 scale		= {1.0f, 1.0f, 1.0f};
+	vec3 rotation		= {0.0f, 0.0f, 0.0f};
 	while (!glfwWindowShouldClose(window)) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		F64 start_time = glfwGetTime();
@@ -161,28 +161,41 @@ main()
 		glClearColor(0.1f, 0.1f, 0.12f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// ------------------------------------------------------------
+		glUseProgram(shader_program);
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, tex2);
 
-		glUseProgram(shader_program);
+
+		mat4x4 transform_;
+		mat4x4_identity(transform_);
+		mat4x4_translate_in_place(transform_, translation[0],
+					  translation[1], translation[2]);
+		mat4x4_scale_aniso(transform_, transform_, scale[0], scale[1], scale[2]);
+
+		shader_set_mat4x4(shader_program, "transform", transform_);
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		// ------------------------------------------------------------
 
 		imgui_start_frame();
 		imgui_log_frame_duration(frame_duration);
+		ImGui::Begin("Hello, World!");
+		ImGui::SliderFloat3("Translation", translation, -1.0f, 1.0f);
+		ImGui::SliderFloat3("Scale", scale, 0.0f, 2.0f);
+		ImGui::End();
 		imgui_end_frame();
-
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		frame_duration = glfwGetTime() - start_time;
 	}
 
-	////////////////////////////////////////////////////////////////////////
-	//// Cleanup
 	glDeleteTextures(1, &tex1);
 	glDeleteTextures(1, &tex2);
 
