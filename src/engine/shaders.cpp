@@ -1,3 +1,4 @@
+
 internal bool
 load_glshader(char *path, U32 type, U32 *shader_id) {
 	FILE *f = fopen(path, "r");

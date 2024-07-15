@@ -1,5 +1,4 @@
 
-
 internal void
 imgui_initialize(GLFWwindow* window)
 {
