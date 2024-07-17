@@ -12,10 +12,16 @@ load_glshader(char *path, U32 type, U32 *shader_id) {
 	flength = ftell(f);
 	fseek(f, 0, SEEK_SET);
 
-	char *fbuffer = (char *)calloc(flength, sizeof(char));
-	I32 bytesread = fread(fbuffer, flength, sizeof(char), f);
-	if (bytesread == 0) {
+	char *fbuffer = (char *)calloc(flength + 1, sizeof(char));
+	if (!fbuffer) {
+		print_error("failed to allocate memory for shader");
+		return false;
+	}
+	U32 bytesread = fread(fbuffer, sizeof(char), flength, f);
+	if (bytesread < flength) {
 		print_error("reading file failed");
+		free(fbuffer);
+		return false;
 	}
 
 	U32 id = glCreateShader(type);

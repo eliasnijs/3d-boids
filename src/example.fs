@@ -1,6 +1,5 @@
 #version 330 core
 
-in  vec4 vertex_color;
 in  vec2 tex_coord;
 out vec4 color;
 

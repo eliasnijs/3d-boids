@@ -14,7 +14,7 @@ LIBS="-L ./libs/archives -lm -lGL -lpthread -lglfw -limgui -lstb"
 
 # flags
 CPPFLAGS="${CPPFLAGS} -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=2 -DVERSION=\"${VERSION}\""
-CFLAGS="${CFLAGS} -g -Wall -Wno-deprecated-declarations -Wno-write-strings -Wno-unused-function -O3 ${INCS} ${CPPFLAGS}"
+CFLAGS="${CFLAGS} -fsanitize=address -g -Wall -Wno-deprecated-declarations -Wno-write-strings -Wno-unused-function -O3 ${INCS} ${CPPFLAGS}"
 
 # compiler
 CC="g++"
