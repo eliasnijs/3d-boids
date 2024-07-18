@@ -11,6 +11,8 @@ framebuffer_size_callback(GLFWwindow* window, I32 width, I32 height) {
 
 internal GLFWwindow *
 window_init(I32 width, I32 height, const char* title) {
+	setenv("DISPLAY", ":0", 1);
+
 	glfwSetErrorCallback(simple_error_callback);
 	if (!glfwInit()) {
 		print_error("Failed to initialize GLFW");
