@@ -164,7 +164,10 @@ main()
 	stbi_image_free(tex1_data);
 
 	U32 shader_program;
-	if (!load_glprogram("./src/shaders/example.vs", "./src/shaders/example.fs", &shader_program)) {
+	if (!load_glprogram("./src/shaders/example.vs",
+			    "./src/shaders/example.fs",
+			    &shader_program)
+	    ) {
 		print_error("failed to load triangle program");
 		return 1;
 	}

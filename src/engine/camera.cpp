@@ -1,4 +1,4 @@
-#define CAMERA_PITCH_CLAMP 90.0f
+#define CAMERA_PITCH_CLAMP 89.0f
 #define CAMERA_FOV_CLAMP_LB 1.0f
 #define CAMERA_FOV_CLAMP_UB 45.0f
 
@@ -45,9 +45,9 @@ internal void
 camera_aim(Camera *camera, F32 dx, F32 dy)
 {
 	camera->yaw   = camera->yaw + camera->sensitivity * dx,
-	camera->pitch = Clamp(-90.0f,
+	camera->pitch = Clamp(-CAMERA_PITCH_CLAMP,
 			      camera->pitch + camera->sensitivity * dy,
-			       90.0f);
+			       CAMERA_PITCH_CLAMP);
 
 	vec3 dir;
 	dir[0] = cos(rad(camera->yaw)) * cos(rad(camera->pitch));
@@ -61,6 +61,4 @@ camera_aim(Camera *camera, F32 dx, F32 dy)
 	vec3_mul_cross(camera->y_axis, camera->x_axis, camera->z_axis);
 	vec3_norm(camera->y_axis, camera->y_axis);
 }
-
-
 
