@@ -41,7 +41,7 @@ imgui_log_camera(Camera *camera)
 	ImGui::InputFloat3("Position", camera->pos);
 	ImGui::InputFloat3("Orientation", camera->orientation);
 	ImGui::SliderFloat("Speed", &camera->speed, 0.1f, 10.0f);
-	ImGui::SliderFloat("FOV", &camera->fov, 1.0f, 179.0f);
+	ImGui::SliderFloat("FOV", &camera->fov, CAMERA_FOV_CLAMP_LB, CAMERA_FOV_CLAMP_UB);
 	ImGui::SliderFloat("Sensitivity", &camera->sensitivity, 0.01f, 1.0f);
 	ImGui::End();
 }

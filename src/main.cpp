@@ -56,8 +56,8 @@ global_variable GameState game_state = {};
 void scroll_callback(GLFWwindow* window, F64 xoffset, F64 yoffset)
 {
 	Camera *camera = &game_state.camera;
-	camera->zoom = Clamp(CAMERA_ZOOM_CLAMP_LB, camera->zoom - yoffset,
-			     CAMERA_ZOOM_CLAMP_UB);
+	camera->fov = Clamp(CAMERA_FOV_CLAMP_LB, camera->fov - yoffset,
+			     CAMERA_FOV_CLAMP_UB);
 }
 
 internal void

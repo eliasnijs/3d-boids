@@ -1,6 +1,6 @@
 #define CAMERA_PITCH_CLAMP 90.0f
-#define CAMERA_ZOOM_CLAMP_LB 1.0f
-#define CAMERA_ZOOM_CLAMP_UB 45.0f
+#define CAMERA_FOV_CLAMP_LB 1.0f
+#define CAMERA_FOV_CLAMP_UB 45.0f
 
 struct Camera {
 	union {
@@ -16,7 +16,6 @@ struct Camera {
 
 	F32	fov;
 	F32	sensitivity;
-	F32	zoom;
 
 	union {
 		vec3	dir[3];
