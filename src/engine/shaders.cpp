@@ -45,7 +45,12 @@ load_glshader(char *path, U32 type, U32 *shader_id) {
 }
 
 internal bool
-load_glprogram(char *vertexPath, char *fragmentPath, U32 *program_id) {
+load_glprogram(char *name, U32 *program_id) {
+	char vertexPath[1024] = {0};
+	char fragmentPath[1024] = {0};
+	snprintf(vertexPath, 1024, "./src/shaders/%s.vs", name);
+	snprintf(fragmentPath, 1024, "./src/shaders/%s.fs", name);
+
 	U32 vertex_shader, fragment_shader;
 	I32 success;
 
@@ -113,5 +118,15 @@ shader_set_vec3(I32 shader_id, char *name, vec3 v) {
 internal void
 shader_set_mat4x4(I32 shader_id, char *name, mat4x4 m) {
   glUniformMatrix4fv(glGetUniformLocation(shader_id, name), 1, GL_FALSE, &m[0][0]);
+}
+
+internal void
+shader_set_camera_transforms(I32 shader_id, Camera *camera) {
+  mat4x4 Tproj, Tview;
+  camera_get_view_transform(camera, Tview);
+  camera_get_perpective_transform(camera, Tproj,
+				  camera->window_w, camera->window_h);
+  shader_set_mat4x4(shader_id, "projection_transform", Tproj);
+  shader_set_mat4x4(shader_id, "view_transform", Tview);
 }
 

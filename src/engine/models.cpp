@@ -53,3 +53,19 @@ model_get_transform(ModelInstance *m, mat4x4 t) {
 	mat4x4_scale_aniso(t, t, m->scale[0], m->scale[1], m->scale[2]);
 }
 
+internal void
+model_die(Model *model) {
+	glDeleteVertexArrays(1, &model->VAO);
+	glDeleteBuffers(1, &model->VBO);
+}
+
+internal void
+draw_model_instance(ModelInstance *m, U32 shader_program) {
+	mat4x4 model_transform;
+	model_get_transform(m, model_transform);
+	shader_set_mat4x4(shader_program, "model_transform", model_transform);
+	glBindVertexArray(m->model->VAO);
+	glDrawArrays(GL_TRIANGLES, 0, m->model->n_vertices);
+}
+
+
