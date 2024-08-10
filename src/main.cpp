@@ -30,6 +30,8 @@ rad(F32 deg)
 #include "engine/models.cpp"
 #include "engine/textures.cpp"
 
+#include "boids.cpp"
+
 struct ButtonState {
 	B32 is_down;
 	B32 was_down;
@@ -70,14 +72,15 @@ struct GameState {
 
 	Camera		camera;
 
-	Model		*models
+	Model		*models;
 	ModelInstance	*instances;
 	U32		n_instances;
-	Shader		*shaders;
+	U32		*shaders;
 	U32		n_shaders;
-	Texture		*textures;
+	U32		*textures;
 	U32		n_textures;
 
+	BoidsApplication boidsapp;
 };
 
 internal B32
@@ -163,38 +166,20 @@ main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetScrollCallback(window, scroll_callback);
 	game_state.window = window;
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 	/* initialize game */
-	game_state.type	= GAME_STATE_PLAY;
-	game_state.dt	= 0.0f;
-	game_state.camera = {
-		{(F32)window_width, (F32)window_height},
-		{0.0f, 0.0f, 3.0f},
-		{0.0f, 0.0f},
-		1.0f, 45.0f, 0.1f
-	};
-	camera_start(&game_state.camera);
+	game_start(&game_state, window_width, window_height);
 
 	Model *cube_model = &DEFAULT_CUBE_MODEL;
 	load_model(cube_model);
-	ModelInstance cubes[1];
-	for (U32 i = 0; i < ArrayCount(cubes); ++i) {
-		model_instance_initialize(&cubes[i], cube_model);
-	}
-
-	Texture tex1;
-	if (!load_texture("./resources/texture.png", &tex1)) {
-		print_error("failed to load texture");
-		return 1;
-	}
 
 	U32 shader_program;
-	if (!load_glprogram("example", &shader_program)) {
+	if (!load_glprogram("boids", &shader_program)) {
 		print_error("failed to load triangle program");
 		return 1;
 	}
 	glUseProgram(shader_program);
-	shader_set_I32(shader_program, "tex1",		0);
 
 	/* game loop */
 	while (!glfwWindowShouldClose(window)) {
@@ -209,13 +194,18 @@ main()
 
 		glUseProgram(shader_program);
 		shader_set_camera_transforms(shader_program, &game_state.camera);
-		use_texture(&tex1, 0);
-		for (U32 i = 0; i < ArrayCount(cubes); ++i) {
-			draw_model_instance(&cubes[i], shader_program);
+		for (I32 i = 0; i < game_state.boidsapp.n; ++i) {
+			Boid *b = &game_state.boidsapp.bs[i];
+			mat4x4 mt;
+			mat4x4_identity(mt);
+			mat4x4_translate_in_place(mt, b->pos[0], b->pos[1], b->pos[2]);
+			shader_set_mat4x4(shader_program, "model_transform", mt);
+			glBindVertexArray(cube_model->VAO);
+			glDrawArrays(GL_TRIANGLES, 0, cube_model->n_vertices);
 		}
 
 		/* draw user interface */
-		gui(&game_state, cubes, ArrayCount(cubes));
+		gui(&game_state);
 
 		/* update window */
 		glfwSwapBuffers(window);
@@ -224,7 +214,7 @@ main()
 	}
 
 	/* cleanup before closing */
-	texture_die(&tex1);
+	game_die(&game_state);
 	model_die(cube_model);
 	glprogram_die(shader_program);
 	imgui_die();

@@ -43,7 +43,7 @@ camera_get_perpective_transform(Camera *camera, mat4x4 projection,
 {
 	mat4x4_perspective(projection, rad(camera->fov),
 			   (F32)window_width / (F32)window_height,
-			   0.1f, 100.0f);
+			   0.1f, 5000.0f);
 }
 
 internal void

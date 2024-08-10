@@ -1,26 +1,19 @@
 
-global_variable U32 selected_instance = 0;
 internal inline void
-imgui_log_model_instance(ModelInstance *instances, U32 n_instances)
+imgui_log_boids_app(BoidsApplication *boids_app)
 {
-	ImGui::Begin("Instances");
-	ImGui::Text("Instances: %d", n_instances);
-	if (ImGui::BeginListBox("Instances", ImVec2(-FLT_MIN, -FLT_MIN))) {
-		for (U32 i = 0; i < n_instances; ++i) {
-			char label[64];
-			snprintf(label, 64, "Instance %d", i);
-			if (ImGui::Selectable(label, i == selected_instance)) {
-				selected_instance = i;
-			}
-		}
-		ImGui::EndListBox();
-	}
-	ImGui::End();
-	ImGui::Begin("Instance");
-	ImGui::Text("Instance %d", selected_instance);
-	ImGui::InputFloat3("Position", instances[selected_instance].pos);
-	ImGui::InputFloat3("Rotation", instances[selected_instance].rot);
-	ImGui::InputFloat3("Scale", instances[selected_instance].scale);
+	ImGui::Begin("Boid controls", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Checkbox("Pause", (bool *)&boids_app->paused);
+	ImGui::SliderInt("Number of Boids", &boids_app->n, 0, MAX_BOIDS);
+	ImGui::SliderFloat("Cohesion", &boids_app->p.c, 0.0f, 1.0f);
+	ImGui::SliderFloat("Separation", &boids_app->p.s, 0.0f, 1.0f);
+	ImGui::SliderFloat("Alignment", &boids_app->p.a, 0.0f, 1.0f);
+	ImGui::SliderFloat("Separation Radius", &boids_app->p.s_r, 0.0f, 100.0f);
+	ImGui::SliderFloat("Radius", &boids_app->p.r, 0.0f, 500.0f);
+	ImGui::SliderFloat("Max view angle z-axis", &boids_app->p.theta_max_z, 0.0f, 3.14f/2.0f);
+	ImGui::SliderFloat("Max view angle y-axis", &boids_app->p.theta_max_y, 0.0f, 3.14f/2.0f);
+	ImGui::SliderFloat("Max Velocity", &boids_app->p.max_vel, 1.0f, 20.0f);
+	ImGui::SliderFloat("Point Size", &boids_app->p.size, 1.0f, 10.0f);
 	ImGui::End();
 }
 
@@ -40,19 +33,19 @@ imgui_log_camera(Camera *camera)
 	ImGui::Begin("Camera");
 	ImGui::InputFloat3("Position", camera->pos);
 	ImGui::InputFloat2("Orientation", camera->orientation);
-	ImGui::SliderFloat("Speed", &camera->speed, 0.1f, 10.0f);
+	ImGui::SliderFloat("Speed", &camera->speed, 0.1f, 100.0f);
 	ImGui::SliderFloat("FOV", &camera->fov, CAMERA_FOV_CLAMP_LB, CAMERA_FOV_CLAMP_UB);
 	ImGui::SliderFloat("Sensitivity", &camera->sensitivity, 0.01f, 1.0f);
 	ImGui::End();
 }
 
 internal inline void
-gui(GameState *game_state, ModelInstance *instances, U32 n_instances)
+gui(GameState *game_state)
 {
 	imgui_start_frame();
 	imgui_log_frame_duration(game_state->dt);
-	imgui_log_model_instance(instances, n_instances);
 	imgui_log_camera(&game_state->camera);
+	imgui_log_boids_app(&game_state->boidsapp);
 	imgui_end_frame();
 }
 

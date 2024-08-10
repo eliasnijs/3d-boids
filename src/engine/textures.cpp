@@ -17,7 +17,7 @@ load_texture_param(char *path, Texture *texture, I32 wrap_s, I32 wrap_t,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 
 	I32 w, h, c;
-	U8 *data = stbi_load("./resources/texture.png", &w, &h, &c, 0);
+	U8 *data = stbi_load(path, &w, &h, &c, 0);
 	if (!data) {
 		print_error("failed to load t");
 		return false;
