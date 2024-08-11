@@ -10,8 +10,7 @@ struct boid_t {
 typedef struct param_t Param;
 struct param_t {
 	F32 r;
-	F32 theta_max_z;
-	F32 theta_max_y;
+	F32 theta_max;
 
 	F32 c;
 
@@ -23,7 +22,7 @@ struct param_t {
 	F32 max_vel;
 	F32 size;
 
-	U32  simulation_space[3];
+	I32  simulation_space[3];
 };
 
 
@@ -39,7 +38,12 @@ internal B32
 has_influence(Boid *b_j, Boid *b_i, Param *p) {
 	vec3 v_rel;
 	vec3_sub(v_rel, b_j->pos, b_i->pos);
-	return vec3_len(v_rel) < p->r;
+	if (vec3_len(v_rel) > p->r) {
+		return false;
+	}
+	F32 norm = Abs(vec3_len(b_i->vel)) * Abs(vec3_len(v_rel));
+	F32 theta = acos(vec3_mul_inner(b_i->vel, v_rel) / norm);
+	return theta < p->theta_max;
 }
 
 internal void
@@ -118,6 +122,7 @@ update_boid(BoidsApplication *app, Boid *b) {
 
 	b->vel[0] = Clamp(-p->max_vel, b->vel[0], p->max_vel);
 	b->vel[1] = Clamp(-p->max_vel, b->vel[1], p->max_vel);
+	b->vel[2] = Clamp(-p->max_vel, b->vel[2], p->max_vel);
 
 	vec3_add(b->pos, b->pos, b->vel);
 
@@ -162,8 +167,7 @@ init_boids_app(BoidsApplication *app) {
 	Param *p = &app->p;
 	app->n = 2000;
 	p->r = 50;
-	p->theta_max_y = 3.14 / 5;
-	p->theta_max_z = 3.14 / 5;
+	p->theta_max = 3.14 / 5;
 	p->c = 0.01;
 	p->s_r = 10;
 	p->s = 0.1;

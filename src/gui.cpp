@@ -10,10 +10,13 @@ imgui_log_boids_app(BoidsApplication *boids_app)
 	ImGui::SliderFloat("Alignment", &boids_app->p.a, 0.0f, 1.0f);
 	ImGui::SliderFloat("Separation Radius", &boids_app->p.s_r, 0.0f, 100.0f);
 	ImGui::SliderFloat("Radius", &boids_app->p.r, 0.0f, 500.0f);
-	ImGui::SliderFloat("Max view angle z-axis", &boids_app->p.theta_max_z, 0.0f, 3.14f/2.0f);
-	ImGui::SliderFloat("Max view angle y-axis", &boids_app->p.theta_max_y, 0.0f, 3.14f/2.0f);
+	ImGui::SliderFloat("View angle", &boids_app->p.theta_max, 0.0f, 3.14f/2.0f);
 	ImGui::SliderFloat("Max Velocity", &boids_app->p.max_vel, 1.0f, 20.0f);
 	ImGui::SliderFloat("Point Size", &boids_app->p.size, 1.0f, 10.0f);
+	ImGui::InputInt3("Simulation Space", boids_app->p.simulation_space);
+	boids_app->p.simulation_space[0] = Clamp(100, boids_app->p.simulation_space[0], 10000);
+	boids_app->p.simulation_space[1] = Clamp(100, boids_app->p.simulation_space[1], 10000);
+	boids_app->p.simulation_space[2] = Clamp(100, boids_app->p.simulation_space[2], 10000);
 	ImGui::End();
 }
 
